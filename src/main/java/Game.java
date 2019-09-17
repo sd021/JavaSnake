@@ -1,40 +1,30 @@
-import java.util.concurrent.TimeUnit;
+import java.awt.*;
 
 public class Game {
     public static void main(String[] args) {
-        Board theBoard = new Board(25, 15);
 
-        while (true) {
-            theBoard.genBlankBoard();
-            theBoard.updateSnake();
-            theBoard.addSnakeToBoard();
+        // Creates a new thread so our GUI can process itself
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                Board theBoard = new Board(25, 15);
 
-            clearScreen();
-            theBoard.drawBoard();
-            sleep(500);
-
-        }
-    }
-
-    public static void clearScreen() {
-        try {
-            final String os = System.getProperty("os.name");
-            System.out.print("\033[H\033[2J");
-            if (os.contains("Windows")) {
-                Runtime.getRuntime().exec("cls");
-            } else {
-                Runtime.getRuntime().exec("clear");
+                GraphicsHandler gh = new GraphicsHandler(theBoard);
+                gh.createAndShowGui();
+                gh.setVisible(true);
             }
-        } catch (final Exception e) {
-            System.out.println(e.getMessage());
-        }
+        });
+
+//        while (true) {
+//            theBoard.generateBlankBoard();
+//            theBoard.updateSnake();
+//            theBoard.addSnakeToBoard();
+//
+//            //Utils.clearScreen();
+//            //theBoard.drawBoard();
+//            Utils.sleep(1000);
+//
+//        }
     }
 
-    public static void sleep(int time) {
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        }
-    }
 }
