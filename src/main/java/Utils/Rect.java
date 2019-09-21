@@ -1,3 +1,5 @@
+package Utils;
+
 public class Rect {
     public int width, height;
 

@@ -1,3 +1,5 @@
+package Utils;
+
 public class Utils {
     /*
      * Right now the cls command is not working for windows.
