@@ -1,5 +1,6 @@
 package Game;
 
+// Config options for speed of game and board layout
 public class GameConfig {
     public static int gameSpeed = 5;         // Number of ticks per second
     public static int boardWidth = 35;       // Number of squares across

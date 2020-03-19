@@ -14,6 +14,11 @@ public class Board extends Snake {
     private Snake snake;
     private Food food;
 
+    public static final int EMPTY = 0;
+    public static final int WALL = 1;
+    public static final int SNAKE = 2;
+    public static final int FOOD = 4;
+
     public Board(int width, int height) {
         this.width = width;
         this.height = height;
@@ -44,15 +49,20 @@ public class Board extends Snake {
         for (int i = 0; i < this.width; i++) {
             for (int j = 0; j < this.height; j++) {
                 if ((i % (this.width - 1) == 0) || (j % (this.height - 1) == 0)) {
-                    boardState[i][j] = 1;     // Wall
+                    boardState[i][j] = WALL;
                 } else {
-                    boardState[i][j] = 0;    // Empty
+                    boardState[i][j] = EMPTY;
                 }
             }
 
         }
     }
 
+    // Reset the board and snake after death
+    public void resetBoard() {
+        snake = new Snake(width - 1, height - 1, width / 2, height / 2);
+        food = new Food(width - 2, height - 2);
+    }
     private void updateSnake() {
         snake.updatePosition();
     }
@@ -77,13 +87,13 @@ public class Board extends Snake {
         for (int i = 0; i < snake.getLength(); i++) {
             Point currentPoint = snake.getPoints()[i];
             if (currentPoint.getX() != 0 && currentPoint.getY() != 0) {
-                boardState[currentPoint.getX()][currentPoint.getY()] = 2;
+                boardState[currentPoint.getX()][currentPoint.getY()] = SNAKE;
             }
         }
     }
 
     private void addFoodToBoard() {
-        boardState[food.getLocation().getX()][food.getLocation().getY()] = 4;
+        boardState[food.getLocation().getX()][food.getLocation().getY()] = FOOD;
     }
 
     public void updateBoard() {

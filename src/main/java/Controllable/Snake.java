@@ -19,7 +19,6 @@ public class Snake implements ControllableCharacter {
         this(maxX, maxY, maxX / 2, maxY / 2);
     }
 
-    // TODO Initial facing direction
     public Snake(int maxX, int maxY, int initialX, int initialY) {
         this.maxX = maxX;
         this.maxY = maxY;
@@ -79,18 +78,18 @@ public class Snake implements ControllableCharacter {
     // If it has put it on the opposite side of the board
     private void handleWallInteractions() {
         for (int i = this.length - 1; i >= 0; i--) {
+            // Left and right walls
             if (points[i].getX() >= maxX ) {
                 points[i].setX(1);
             } else if (points[i].getX() < 1) {
                 points[i].setX(this.maxX - 1);
             }
 
+            // Top and bottom walls
             if (points[i].getY() >= this.maxY ) {
                 points[i].setY(1);
-                System.out.println(points[0].getY());
-                System.out.println(this.maxY);
             } else if (points[i].getY() < 1) {
-                points[i].setY(this.maxY - 1); // TODO WHy?
+                points[i].setY(this.maxY - 1);
 
             }
         }

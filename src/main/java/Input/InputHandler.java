@@ -1,38 +1,38 @@
 package Input;
 
-import Controllable.ControllableCharacter;
+import Board.Board;
 import Game.GameState;
 import Game.State;
 import Utils.Direction;
+
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class InputHandler extends KeyAdapter{
 
-    private final ControllableCharacter controllable;
+    private final Board board;
 
-    public InputHandler(ControllableCharacter controllable) {
-        this.controllable = controllable;
+    public InputHandler(Board board) {
+        this.board = board;
     }
 
     public void playingInput(KeyEvent e) {
         int key = e.getKeyCode();
 
-        if (key == KeyEvent.VK_LEFT) {
-            controllable.setDirection(Direction.LEFT);
-        }
-
-        if (key == KeyEvent.VK_RIGHT) {
-            controllable.setDirection(Direction.RIGHT);
-        }
-
-        if (key == KeyEvent.VK_UP) {
-            controllable.setDirection(Direction.UP);
-        }
-
-        if (key == KeyEvent.VK_DOWN) {
-            controllable.setDirection(Direction.DOWN);
+        switch (key) {
+            case KeyEvent.VK_LEFT:
+                board.getSnake().setDirection(Direction.LEFT);
+                break;
+            case KeyEvent.VK_RIGHT:
+                board.getSnake().setDirection(Direction.RIGHT);
+                break;
+            case KeyEvent.VK_UP:
+                board.getSnake().setDirection(Direction.UP);
+                break;
+            case KeyEvent.VK_DOWN:
+                board.getSnake().setDirection(Direction.DOWN);
+                break;
         }
     }
 
@@ -41,6 +41,9 @@ public class InputHandler extends KeyAdapter{
 
         if (key == KeyEvent.VK_SPACE) {
             GameState.setState(State.PLAYING);
+            GameState.resetScore();
+            board.resetBoard();
+
         }
     }
     @Override
@@ -48,17 +51,8 @@ public class InputHandler extends KeyAdapter{
         if (GameState.getState() == State.PLAYING) {
             playingInput(e);
         }
-        else if (GameState.getState() == State.INTRO) {
+        else if ((GameState.getState() == State.INTRO) || (GameState.getState() == State.DEAD)) {
             menuInput(e);
         }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent event) {
-        // different stuff
-    }
-    @Override
-    public void keyTyped(KeyEvent event) {
-        // more stuff
     }
 }

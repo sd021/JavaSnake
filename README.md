@@ -6,7 +6,7 @@ To build:
 
 ```mvn clean compile```
 
-To Create a runnable jar:
+To create a runnable jar:
 
 ```mvn clean package```
 

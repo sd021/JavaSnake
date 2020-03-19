@@ -11,17 +11,12 @@ import java.awt.*;
 import javax.swing.*;
 
 public class GraphicsHandler extends JPanel{
-    private static final int RECT_X = 20;
-    private static final int RECT_Y = RECT_X;
-    private static final int RECT_WIDTH = 500;
-    private static final int RECT_HEIGHT = RECT_WIDTH;
-
     public Board board;
 
     public GraphicsHandler(Board board) {
         this.board = board;
         JFrame frame = new JFrame("JavaSnake");
-        frame.addKeyListener(new InputHandler(board.getSnake()));
+        frame.addKeyListener(new InputHandler(board));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(this);
         frame.pack();
@@ -49,54 +44,64 @@ public class GraphicsHandler extends JPanel{
         // in appropriate places for walls, snake and food
         for (int i =0; i<board.getWidth();i++) {
             for (int j=0; j<board.getHeight(); j++) {
-                // Walls
-                if (board.getBoardArray()[i][j] == 1) {
-                    g.setColor(java.awt.Color.BLACK);
-                    g.fillRect(i*boardSquareDim, j*boardSquareDim, boardSquareDim, boardSquareDim);
+                switch (board.getBoardArray()[i][j]) {
+                    case Board.WALL:
+                        g.setColor(Color.BLACK);
+                        break;
+                    case Board.SNAKE:
+                        g.setColor(Color.BLUE);
+                        break;
+                    case Board.FOOD:
+                        g.setColor(Color.GREEN);
+                        break;
+                    case Board.EMPTY:
+                        g.setColor(Color.WHITE);
+                        break;
                 }
-                // Snake
-                else if (board.getBoardArray()[i][j] == 2) {
-                    g.setColor(java.awt.Color.BLUE);
-                    g.fillRect(i*boardSquareDim, j*boardSquareDim, boardSquareDim, boardSquareDim);
-                }
-                // Food
-                else if (board.getBoardArray()[i][j] == 4) {
-                    g.setColor(Color.GREEN);
-                    g.fillRect(i*boardSquareDim, j*boardSquareDim, boardSquareDim, boardSquareDim);
-                }
+                g.fillRect(i*boardSquareDim, j*boardSquareDim, boardSquareDim, boardSquareDim);
             }
         }
     }
 
     public void drawMenu(Graphics g) {
-        g.drawString("Press Space to start game!", 100, 100);
+        g.setFont(new Font("Bauhaus 93", Font.PLAIN, 35));
+        g.drawString("Press Space to start game!",(GameConfig.boardWidth * GameConfig.squareSize) / 5,
+                (GameConfig.boardWidth  * GameConfig.squareSize) / 2);
     }
 
     public void drawDeathMessage(Graphics g) {
+        g.setFont(new Font("Bauhaus 93", Font.PLAIN, 35));
         String msg = String.format("Dead! You scored %s.", GameState.getScore());
-        g.drawString(msg, 100, 100);
+        g.drawString(msg, (GameConfig.boardWidth * GameConfig.squareSize) / 5,
+                (GameConfig.boardWidth  * GameConfig.squareSize) / 2);
+
+        msg = "Press Space to restart!";
+        g.drawString(msg, (GameConfig.boardWidth * GameConfig.squareSize) / 5,
+                ((GameConfig.boardWidth  * GameConfig.squareSize) / 2) + 35 );
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        if (GameState.getState() == State.PLAYING) {
-            drawPlayingGame(g);
-            drawScore(g);
-        }
-        else if (GameState.getState()  == State.DEAD) {
-            drawPlayingGame(g);
-            drawDeathMessage(g);
-        }
-        else if (GameState.getState()  == State.INTRO) {
-            drawMenu(g);
+        switch (GameState.getState()) {
+            case INTRO:
+                drawMenu(g);
+                break;
+            case PLAYING:
+                drawPlayingGame(g);
+                drawScore(g);
+                break;
+            case DEAD:
+                drawPlayingGame(g);
+                drawDeathMessage(g);
+                break;
         }
     }
 
     @Override
     public Dimension getPreferredSize() {
-        // so that our GUI is big enough
+        // This will be the initial size of the window, we set it to the dimensions of the game
         return new Dimension(GameConfig.boardWidth * GameConfig.squareSize,
                 GameConfig.boardHeight * GameConfig.squareSize);
     }
